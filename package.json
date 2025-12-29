@@ -1,0 +1,25 @@
+﻿{
+  "name": "secure-vault-authorization-system",
+  "version": "1.0.0",
+  "description": "A secure vault system with separate authorization management for blockchain fund transfers",
+  "main": "scripts/deploy.js",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "test:verbose": "hardhat test --verbose",
+    "deploy": "hardhat run scripts/deploy.js --network localhost",
+    "deploy:test": "hardhat run scripts/deploy.js --network hardhat",
+    "node": "hardhat node",
+    "clean": "hardhat clean"
+  },
+  "keywords": ["blockchain", "ethereum", "smart-contracts", "vault", "authorization", "security"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "chai": "^4.3.7",
+    "ethers": "^6.7.1",
+    "hardhat": "^2.19.2"
+  },
+  "dependencies": {}
+}

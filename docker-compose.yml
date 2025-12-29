@@ -1,0 +1,52 @@
+services:
+  # Local Hardhat blockchain node
+  blockchain:
+    image: node:18-alpine
+    container_name: secure-vault-blockchain
+    working_dir: /hardhat
+    volumes:
+      - ./:/app
+    ports:
+      - "8545:8545"  # RPC endpoint
+      - "8546:8546"  # WebSocket endpoint
+    command: >
+      sh -c "
+        cd /app &&
+        npm install &&
+        npx hardhat node
+      "
+    networks:
+      - secure-vault-network
+    environment:
+      - NODE_ENV=development
+
+  # Deployer service that deploys contracts
+  deployer:
+    container_name: secure-vault-deployer
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    depends_on:
+      blockchain:
+        condition: service_started
+    volumes:
+      - ./:/app
+      - ./deployments:/app/deployments
+    networks:
+      - secure-vault-network
+    environment:
+      - NODE_ENV=development
+    # Wait for blockchain to start before deploying
+    command: >
+      sh -c "
+        echo 'Waiting for blockchain to be ready...' &&
+        sleep 5 &&
+        npx hardhat compile &&
+        npx hardhat run scripts/deploy.js --network localhost &&
+        echo 'Deployment complete!' &&
+        tail -f /dev/null
+      "
+
+networks:
+  secure-vault-network:
+    driver: bridge
